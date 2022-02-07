@@ -14,14 +14,11 @@ function createCustomElement(element, className, innerText) {
 
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
-  
   section.className = 'item';
-  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  
   return section;
 }
 
@@ -57,19 +54,38 @@ async function listaItens(item) {
 
 const itemOfList = document.querySelector('.cart__items');
 
+const cartItemsSaved = [];
 const cartItem = async (event) => {
   const itemSelected = event.target.parentElement;
-  const produtoSelected = getSkuFromProductItem(itemSelected);
-  const resultFetch = await fetchItem(produtoSelected); 
-  itemOfList.appendChild(createCartItemElement({ 
-      sku: resultFetch.id, 
-      name: resultFetch.title, 
-      salePrice: resultFetch.price,
-  }));
+  const productSelected = getSkuFromProductItem(itemSelected);
+  const resultFetch = await fetchItem(productSelected); 
+  const productObject = { 
+    sku: resultFetch.id, 
+    name: resultFetch.title, 
+    salePrice: resultFetch.price,
+  };  
+  cartItemsSaved.push(productObject);
+  saveCartItems('cartItems', cartItemsSaved);
+  itemOfList.appendChild(createCartItemElement(productObject));
 };
 
+const getCartOfLocalStorage = async () => {
+  if (localStorage.length !== 0) {
+    console.log(localStorage.cartItems);
+    const resultado = getSavedCartItems('cartItems');
+    await resultado.forEach((element) => {
+    const li = document.createElement('li');
+    li.className = 'cart__item';
+    li.innerText = `SKU: ${element.sku} | NAME: ${element.name} | PRICE: $${element.salePrice}`;
+    li.addEventListener('click', cartItemClickListener);
+    itemOfList.appendChild(li);
+    });  
+ }
+};
+ 
 window.onload = async () => {
   await listaItens('computador');
   const buttonAdd = document.querySelectorAll('.item__add');
   buttonAdd.forEach((element) => element.addEventListener('click', cartItem));
+  getCartOfLocalStorage();
 };
