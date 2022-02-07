@@ -71,7 +71,6 @@ const cartItem = async (event) => {
 
 const getCartOfLocalStorage = async () => {
   if (localStorage.length !== 0) {
-    console.log(localStorage.cartItems);
     const resultado = getSavedCartItems('cartItems');
     await resultado.forEach((element) => {
     const li = document.createElement('li');
@@ -82,6 +81,14 @@ const getCartOfLocalStorage = async () => {
     });  
  }
 };
+
+const emptyCart = () => {
+  itemOfList.innerText = '';
+  localStorage.removeItem('cartItems');
+};
+
+const buttonEmpty = document.querySelector('.empty-cart');
+buttonEmpty.addEventListener('click', emptyCart);
  
 window.onload = async () => {
   await listaItens('computador');
