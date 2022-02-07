@@ -39,6 +39,18 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 const itensListaSelected = document.querySelector('.items');
+const itemOfList = document.querySelector('.cart__items');
+const cartSection = document.querySelector('.cart');
+
+const liLoading = document.createElement('li');
+liLoading.className = 'loading';
+cartSection.appendChild(liLoading);
+liLoading.innerText = 'carregando....';
+const loadFinish = document.querySelector('.loading');
+
+const loadingFinish = () => {
+  cartSection.removeChild(loadFinish);
+};
 
 async function listaItens(item) {
   const fetchOfItems = await fetchProducts(item); 
@@ -50,9 +62,8 @@ async function listaItens(item) {
       image: product.thumbnail, 
       }));
   });
+  loadingFinish();
 }  
-
-const itemOfList = document.querySelector('.cart__items');
 
 const cartItemsSaved = [];
 const cartItem = async (event) => {
@@ -84,12 +95,12 @@ const getCartOfLocalStorage = async () => {
 
 const emptyCart = () => {
   itemOfList.innerText = '';
-  localStorage.removeItem('cartItems');
+  localStorage.clear();
 };
 
 const buttonEmpty = document.querySelector('.empty-cart');
 buttonEmpty.addEventListener('click', emptyCart);
- 
+
 window.onload = async () => {
   await listaItens('computador');
   const buttonAdd = document.querySelectorAll('.item__add');

@@ -150,12 +150,20 @@ body {
   margin: 0 auto;
   border: 2px solid rgb(5, 52, 219);
   background-color: rgb(249, 249, 246);
-  order: 3;
+  order: 2;
 }
 
-.total-price {
+/* .total-price {
   display: flex;
   justify-content: center;
   order: 2;
   margin-bottom: 15px;
+} */
+
+.loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  font-size: 20pt;
+  order: 3;
 }
